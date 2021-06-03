@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Quiz Page</title>
+</head>
+<body>
+{% for question in question_list %}
+    {{question}}<br>
+        {% comment %} {% for choice in question.Choice_set.all() %}
+            {{choice}}
+        {% endfor %} {% endcomment %}
+{% endfor %}
+</form>
+</body>
+</html>
