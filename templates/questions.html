@@ -7,9 +7,9 @@
 <body>
 {% for question in question_list %}
     {{question}}<br>
-        {% comment %} {% for choice in question.Choice_set.all() %}
+        {% for choice in question.choice_set.all %}
             {{choice}}
-        {% endfor %} {% endcomment %}
+        {% endfor %}
 {% endfor %}
 </form>
 </body>

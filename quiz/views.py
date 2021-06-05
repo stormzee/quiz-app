@@ -73,7 +73,7 @@ def GetQuestions(request, quiz_slug):
 
     for question in quiz.question_set.all():
         question_list.append(question)
-    # print(question_list[0].question_text)
+        
     context = {
         'quiz':quiz,
         'question_list':question_list,
