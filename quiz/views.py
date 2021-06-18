@@ -1,6 +1,6 @@
 from django.shortcuts import render, HttpResponse, get_object_or_404, redirect
 from .forms import QuizForm, QuestionForm, ChoiceForm
-from .models import Quiz, Question, Choice
+from .models import Quiz, Question, Choice, Question_Answer, Quiz_Answer
 
 def show_quizzes(request):
     quiz_list = Quiz.objects.all()
@@ -74,42 +74,15 @@ def GetQuestions(request, quiz_slug):
     for question in quiz.question_set.all():
         question_list.append(question)
         
+        if request.method == 'POST':
+            selected_choice = Choice.objects.get(id=request.POST['choice'])
+            answered_question= Question_Answer.objects.create(
+            answer=selected_choice, quiz_answer=quiz
+        )
+
     context = {
         'quiz':quiz,
         'question_list':question_list,
     }
 
     return render(request, 'questions.html', context=context)
-    
-
-    ...
-
-
-def QuizAnsweringView(request, quiz_slug):
-    """for every question:
-    1. display the question
-    2. display the choices.
-
-    if choices are selected and request is POST:
-        3. create a question answer object for every question
-        4. create a quiz answer object for all the question answer objects
-        5. save selected choice, question answer, quiz answer objects
-
-
-    Args:
-        request ([http request]): [description]
-        quiz_slug ([slug]): [arg to get a specific object from the models]
-    """
-    quiz = Quiz.objects.get(slug=quiz_slug)
-    context = {
-        'quiz':quiz,
-    }
-    return render(request, 'quizzes.html', context=context)
-
-def QuizAnsweringView(request):
-    ...
-    """for every question:
-    get the selected choice(answer)
-    """
-
-    

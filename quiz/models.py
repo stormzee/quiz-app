@@ -105,10 +105,6 @@ class Question(models.Model):
         self.generate_slug()
         return super(Question, self).save(*args, **kwargs)
 
-
-    
-
-
 class Choice(models.Model):
     choice_text = models.CharField(("choice text"), max_length=200)
     question = models.ForeignKey("Question", verbose_name=("question"), on_delete=models.CASCADE)
