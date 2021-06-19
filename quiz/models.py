@@ -119,7 +119,7 @@ class Choice(models.Model):
 
 class Quiz_Answer(models.Model):
     quiz = models.ForeignKey("Quiz", verbose_name=("quiz"), on_delete=models.CASCADE)
-    timestamp = models.DateTimeField(("timestamp"), auto_now=False, auto_now_add=False)
+    timestamp = models.DateTimeField(("timestamp"), auto_now=True)
     slug = models.SlugField(("slug"), max_length=500)
 
 
@@ -133,6 +133,17 @@ class Quiz_Answer(models.Model):
     def get_absolute_url(self):
         return reverse("Quiz_Answer_detail", kwargs={"pk": self.pk})
 
+        
+    def generate_slug(self):
+        self.slug = slugify(self.slug)
+        return self.slug
+
+
+    def save(self, *args, **kwargs):
+        self.generate_slug()
+        return super(Quiz_Answer, self).save(*args, **kwargs)
+
+
 class Question_Answer(models.Model):
     answer = models.ForeignKey("Choice", verbose_name=("answer"), on_delete=models.CASCADE)
     quiz_answer = models.ForeignKey("Quiz_Answer", verbose_name=("quiz answer"), on_delete=models.CASCADE)
@@ -143,7 +154,7 @@ class Question_Answer(models.Model):
         verbose_name_plural = ("Question_Answers")
 
     def __str__(self):
-        return self.quiz_answer.quiz.title
+        return self.answer.question.question_text
 
     def get_absolute_url(self):
         return reverse("Question_Answer_detail", kwargs={"pk": self.pk})

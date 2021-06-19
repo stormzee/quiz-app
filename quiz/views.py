@@ -69,20 +69,29 @@ def add_choices(request, question_slug):
 def GetQuestions(request, quiz_slug):
 
     quiz = get_object_or_404(Quiz, slug=quiz_slug)
-    question_list = []
+    questions = quiz.question_set.all()
+    answered_quiz = Quiz_Answer(quiz=quiz)
+    answered_quiz.save()
+    
+    for question in questions:
 
-    for question in quiz.question_set.all():
-        question_list.append(question)
-        
         if request.method == 'POST':
             selected_choice = Choice.objects.get(id=request.POST['choice'])
-            answered_question= Question_Answer.objects.create(
-            answer=selected_choice, quiz_answer=quiz
-        )
+            answered_question = Question_Answer()
+            answered_question.answer = selected_choice
+            answered_question.quiz_answer = answered_quiz
+
+    answered_quiz.save()
+
+
 
     context = {
         'quiz':quiz,
-        'question_list':question_list,
+        'questions':questions,
     }
 
     return render(request, 'questions.html', context=context)
+
+
+
+# Todo==> create a different view to handle answering of questions.
