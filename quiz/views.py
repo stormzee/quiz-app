@@ -70,20 +70,18 @@ def GetQuestions(request, quiz_slug):
 
     quiz = get_object_or_404(Quiz, slug=quiz_slug)
     questions = quiz.question_set.all()
-    answered_quiz = Quiz_Answer(quiz=quiz)
-    answered_quiz.save()
-    
-    for question in questions:
 
-        if request.method == 'POST':
-            selected_choice = Choice.objects.get(id=request.POST['choice'])
-            answered_question = Question_Answer()
-            answered_question.answer = selected_choice
-            answered_question.quiz_answer = answered_quiz
-
-    answered_quiz.save()
-
-
+    if request.method == 'POST':
+        answered_quiz = Quiz_Answer.objects.create(
+            quiz=quiz
+        )
+        
+        for question in questions:
+            # get the answer chosen buy the user by for that specific question number.
+            # i set the 'name' instance of the form to be the question_id
+            # so we get the choice of every separate question id.
+            selected_choice = Choice.objects.get(id=request.POST[str(question.id)])
+            answered_question = Question_Answer.objects.create(answer=selected_choice,quiz_answer= answered_quiz)
 
     context = {
         'quiz':quiz,
@@ -91,7 +89,3 @@ def GetQuestions(request, quiz_slug):
     }
 
     return render(request, 'questions.html', context=context)
-
-
-
-# Todo==> create a different view to handle answering of questions.

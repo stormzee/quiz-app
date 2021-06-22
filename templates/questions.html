@@ -10,7 +10,14 @@
 {% for question in quiz.question_set.all %}
     <p>{{forloop.counter}}.{{question.question_text}}</p>
         {% for choice in question.choice_set.all %}
-        <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{choice.id}}">
+        
+        {% comment %} the name attribute of the choices are set as the question id, so 
+        that we get the value of that specific question id..
+        *name attribute should be dynamic to avoid 'multidictkey value error'
+        * e.g. name="{{question.id}}"-- is dynamic for every question, and is used to get the value of the selected choice for every question{% endcomment %}
+
+
+        <input type="radio" name="{{question.id}}" value="{{choice.id}}">
             <label>{{ choice.choice_text }}</label><br>
         {% endfor %}
 {% endfor %}
